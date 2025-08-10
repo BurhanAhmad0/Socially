@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: "Poppins";
+  src: local("Poppins-Regular"),
+    url("./assets/fonts/Poppins/Poppins-Regular.ttf");
+}
+
+@theme {
+  --font-primary: "Poppins", "sans-serif";
+}
+
+* {
+  @apply font-primary;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
