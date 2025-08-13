@@ -3,9 +3,9 @@ import "dotenv/config";
 import cors from "cors";
 import authRoutes from "./Routes/AuthRoutes.js";
 import userRoutes from "./Routes/UserRoutes.js";
+import postRoutes from "./Routes/PostRoutes.js";
 import { connectDB } from "./Utils/connectDB.js";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 
 const app = express();
 const port = 3000;
@@ -34,6 +34,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on http://127.0.0.1:${port}`);

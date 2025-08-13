@@ -1,64 +1,61 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaThumbsUp, FaRegCommentDots, FaShareAlt } from "react-icons/fa";
+import axios from "axios";
 
 const Post = () => {
-  // Mock data (replace with dynamic data later)
-  const post = {
-    id: 1,
-    author: {
-      name: "Jane Doe",
-      avatar: "https://i.pravatar.cc/150?img=5",
-      username: "@janedoe",
-    },
-    content: "Just finished designing the new interface. Thoughts?",
-    image: "https://picsum.photos/seed/1/600/400",
-    timestamp: "2 hours ago",
-    likes: 134,
-    comments: [
-      {
-        id: 1,
-        author: "John Smith",
-        avatar: "https://i.pravatar.cc/150?img=8",
-        text: "Looks awesome!",
-        time: "1 hour ago",
-      },
-    ],
-  };
-
+  const { postId } = useParams();
   const navigate = useNavigate();
+  const [post, setPost] = useState(null);
+
+  useEffect(() => {
+    const getSinglePost = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/posts/${postId}`,
+          { withCredentials: true }
+        );
+        setPost(response.data.post);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getSinglePost();
+  }, [postId]);
+
+  if (!post) {
+    return <div className="text-center py-8 text-gray-500">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-[#121212] py-8 px-4 md:px-8">
       <div className="max-w-2xl mx-auto bg-white dark:bg-[#1e1e1e] shadow-md rounded-lg p-6">
-        {/* Author Info */}
+        {/* Owner Info */}
         <div
           onClick={(e) => {
             e.stopPropagation();
-            navigate("/burhan");
+            navigate(`/${post.owner?.username}`);
           }}
           className="flex items-center mb-4 cursor-pointer"
         >
           <img
-            src={post.author.avatar}
-            alt={post.author.name}
+            src={post.owner?.avatar}
+            alt={post.owner?.name}
             className="w-12 h-12 rounded-full object-cover mr-4"
           />
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-              {post.author.name}
+              {post.owner?.firstName + " " + post.owner?.lastName}
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              {post.author.username}
+              @{post.owner?.username}
             </p>
           </div>
         </div>
 
         {/* Post Content */}
         <div className="mb-4">
-          <p className="text-gray-800 dark:text-gray-100 mb-4">
-            {post.content}
-          </p>
+          <p className="text-gray-800 dark:text-gray-100 mb-4">{post.text}</p>
           {post.image && (
             <img
               src={post.image}
@@ -82,7 +79,9 @@ const Post = () => {
             <FaShareAlt />
             <span>Share</span>
           </button>
-          <span className="text-xs text-gray-400">{post.timestamp}</span>
+          <span className="text-xs text-gray-400">
+            {new Date(post.timestamp).toLocaleString()}
+          </span>
         </div>
 
         {/* Comments */}
@@ -91,22 +90,25 @@ const Post = () => {
             Comments
           </h4>
 
-          {post.comments.length === 0 && (
+          {post.comments?.length === 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
               No comments yet.
             </p>
           )}
 
-          {post.comments.map((comment) => (
-            <div key={comment.id} className="flex items-start mt-4">
+          {post.comments?.map((comment) => (
+            <div
+              key={comment._id || comment.id}
+              className="flex items-start mt-4"
+            >
               <img
                 src={comment.avatar}
-                alt={comment.author}
+                alt={comment.owner}
                 className="w-8 h-8 rounded-full mr-3"
               />
               <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md w-full">
                 <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {comment.author}
+                  {comment.owner}
                 </p>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
                   {comment.text}

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const [caption, setCaption] = useState("");
@@ -13,10 +15,45 @@ const CreatePost = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send data to API or server
-    console.log("Post submitted:", { caption, image });
+
+    const formData = new FormData();
+    formData.append("text", caption);
+    formData.append("image", image);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/posts`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Post uploaded successfully");
+        console.log("Success:", response.data);
+      } else {
+        toast.warn("Unexpected response from server.");
+        console.warn("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+
+      if (error.response) {
+        const message =
+          error.response.data?.message || "Post uploaded successfully.";
+        toast.error(message);
+      } else if (error.request) {
+        toast.error("No response from server. Please try again later.");
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
+    }
   };
 
   return (
