@@ -80,7 +80,7 @@ const Post = () => {
             <span>Share</span>
           </button>
           <span className="text-xs text-gray-400">
-            {new Date(post.timestamp).toLocaleString()}
+            {new Date(post.createdAt).toLocaleString()}
           </span>
         </div>
 
