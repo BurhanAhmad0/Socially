@@ -137,7 +137,7 @@ const loginController = async (req, res) => {
 
 const logoutController = async (req, res) => {
   try {
-    res.clearCookie("SESSION_TOKEN", SESSION_TOKEN, {
+    res.clearCookie("SESSION_TOKEN", {
       httpOnly: true,
       secure: true,
       sameSite: "None", // allows cross-site cookies
