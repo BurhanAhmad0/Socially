@@ -52,8 +52,8 @@ const registerController = async (req, res) => {
 
     res.cookie("SESSION_TOKEN", SESSION_TOKEN, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "None", // allows cross-site cookies
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -111,8 +111,8 @@ const loginController = async (req, res) => {
 
     res.cookie("SESSION_TOKEN", SESSION_TOKEN, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true,
+      sameSite: "None", // allows cross-site cookies
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
@@ -137,11 +137,11 @@ const loginController = async (req, res) => {
 
 const logoutController = async (req, res) => {
   try {
-    res.clearCookie("SESSION_TOKEN", {
+    res.clearCookie("SESSION_TOKEN", SESSION_TOKEN, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      path: "/", // ensure this matches the original cookie path
+      secure: true,
+      sameSite: "None", // allows cross-site cookies
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
     res.status(200).json({
