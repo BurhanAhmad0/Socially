@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import AboutImg1 from "../Assets/about1.svg";
+import AboutImg1 from "../assets/about1.svg";
 import AboutImg2 from "../Assets/about2.svg";
 import ArrowIcon from "../Assets/arrow-white.svg";
 import { motion } from "motion/react";
