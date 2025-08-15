@@ -7,16 +7,17 @@ import ProfileMediaSection from "../Components/ProfileMediaSection.jsx";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const posts = [
-  { id: 1, image: "https://picsum.photos/id/101/600/400" },
-  { id: 2, image: "https://picsum.photos/id/102/600/400" },
-  { id: 3, image: "https://picsum.photos/id/103/600/400" },
-];
+// const posts = [
+//   { id: 1, image: "https://picsum.photos/id/101/600/400" },
+//   { id: 2, image: "https://picsum.photos/id/102/600/400" },
+//   { id: 3, image: "https://picsum.photos/id/103/600/400" },
+// ];
 
 const ProfilePage = () => {
   const { username } = useParams();
 
   const [tab, setTab] = useState("posts");
+  const [posts, setPosts] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
@@ -59,6 +60,25 @@ const ProfilePage = () => {
     fetchUserProfile();
   }, [username]);
 
+  useEffect(() => {
+    const getFeedPosts = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/posts/user/${username}`,
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(response);
+        setPosts(response.data.posts);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getFeedPosts();
+  }, [username]);
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-[#1f1f1f] transition-colors duration-300">
       {/* Profile Header */}
@@ -73,6 +93,7 @@ const ProfilePage = () => {
 
       {/* Stats */}
       <ProfileStatsSection
+        numberOfPosts={posts.length}
         followers={userProfile?.followers.length}
         following={userProfile?.following.length}
       />

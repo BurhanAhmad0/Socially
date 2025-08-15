@@ -6,22 +6,24 @@ const PostGallerySection = ({ posts }) => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-      {posts.map((post) => (
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate("/post/1");
-          }}
-          key={post.id}
-          className="bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
-        >
-          <img
-            src={post.image}
-            alt={`Post ${post.id}`}
-            className="w-full h-48 object-cover"
-          />
-        </div>
-      ))}
+      {posts
+        .filter((post) => post.image) // ✅ Only keep posts with images
+        .map((post) => (
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/post/${post._id}`);
+            }}
+            key={post._id}
+            className="bg-white dark:bg-[#1f1f1f] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
+          >
+            <img
+              src={post.image}
+              alt={`Post ${post._id}`}
+              className="w-full h-48 object-cover"
+            />
+          </div>
+        ))}
     </div>
   );
 };
