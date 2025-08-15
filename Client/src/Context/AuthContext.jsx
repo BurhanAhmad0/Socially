@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 // Create the context
 const AuthContext = createContext();
@@ -13,9 +14,11 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null); // Holds user data
+  const [logoutReqLoading, setLogoutReqLoading] = useState(false);
   const [loading, setLoading] = useState(true); // Tracks loading status
 
   const handleLogout = async () => {
+    setLogoutReqLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/auth/logout`,
@@ -28,7 +31,8 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200 || response.status === 204) {
         console.log("Logout successful:", response.data);
         // Optionally: clear localStorage or user context
-        // toast.success("Logged out successfully");
+        toast.success("Logged out successfully");
+        setUser(null);
         navigate("/login");
       } else {
         console.warn("Unexpected logout response:", response);
@@ -38,10 +42,12 @@ export const AuthProvider = ({ children }) => {
         const message =
           error.response?.data?.message || "Logout failed. Please try again.";
         console.error("Logout error:", message);
-        // toast.error(message); // Optional feedback
+        toast.error(message); // Optional feedback
       } else {
         console.error("Unexpected error during logout:", error);
       }
+    } finally {
+      setLogoutReqLoading(false);
     }
   };
 
@@ -64,7 +70,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, handleLogout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, loading, handleLogout, logoutReqLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const CreatePost = () => {
+  const [createPostReqLoading, setCreatePostReqLoading] = useState(false);
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -16,6 +18,7 @@ const CreatePost = () => {
   };
 
   const handleSubmit = async (e) => {
+    setCreatePostReqLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -53,6 +56,11 @@ const CreatePost = () => {
       } else {
         toast.error("An error occurred. Please try again.");
       }
+    } finally {
+      setCreatePostReqLoading(false);
+      setImage(null);
+      setCaption("");
+      setPreviewUrl("");
     }
   };
 
@@ -112,9 +120,14 @@ const CreatePost = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="dark:bg-white dark:text-black dark:hover:bg-white/80 w-full cursor-pointer bg-[#1A202C] text-white py-2 rounded-md hover:bg-[#1A202C]/75 transition"
+            disabled={createPostReqLoading}
+            className="flex items-center justify-center dark:bg-white dark:text-black dark:hover:bg-white/80 w-full cursor-pointer bg-[#1A202C] text-white py-2 rounded-md hover:bg-[#1A202C]/75 transition"
           >
-            Post
+            {createPostReqLoading ? (
+              <LuLoaderCircle size={25} color="black" />
+            ) : (
+              "Post"
+            )}
           </button>
         </form>
       </div>

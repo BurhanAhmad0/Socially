@@ -6,9 +6,10 @@ import SettingsIcon from "../assets/setting.svg";
 import SidebarSearchComponent from "./SidebarSearchComponent.jsx";
 import SidebarNavBtns from "./SidebarNavBtns.jsx";
 import { useAuth } from "../Context/AuthContext.jsx";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const Sidebar = () => {
-  const { user, setUser, loading, handleLogout } = useAuth();
+  const { user, setUser, loading, handleLogout, logoutReqLoading } = useAuth();
 
   return (
     <aside className="sidebar h-full px-5 py-7 border-r border-gray-200 dark:border-gray-700 bg-[#f9f9f9] dark:bg-[#1f1f1f] text-gray-900 dark:text-gray-100 flex flex-col justify-between transition-colors duration-300">
@@ -70,6 +71,7 @@ const Sidebar = () => {
             onClick={() => {
               handleLogout();
             }}
+            disabled={logoutReqLoading}
             className="cursor-pointer flex items-center gap-3 text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
           >
             <img
@@ -78,7 +80,7 @@ const Sidebar = () => {
               src={LogoutIcon}
               alt="Logout Icon"
             />
-            Logout
+            {logoutReqLoading ? <LuLoaderCircle /> : "Logout"}
           </button>
         </li>
       </ul>

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const FeedUploadSection = () => {
   const [caption, setCaption] = useState("");
+  const [postReqLoading, setPostReqLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+    setPostReqLoading(true);
     e.preventDefault();
 
     const formData = new FormData();
@@ -42,6 +45,9 @@ const FeedUploadSection = () => {
       } else {
         toast.error("An error occurred. Please try again.");
       }
+    } finally {
+      setPostReqLoading(false);
+      setCaption("");
     }
   };
 
@@ -58,9 +64,10 @@ const FeedUploadSection = () => {
       <div className="flex justify-end mt-2">
         <button
           onClick={(e) => handleSubmit(e)}
+          disabled={postReqLoading}
           className="bg-[#1A202C] text-white dark:bg-white dark:text-black px-6 py-2 rounded hover:opacity-90 cursor-pointer transition duration-200"
         >
-          Post
+          {postReqLoading ? <LuLoaderCircle /> : "Post"}
         </button>
       </div>
     </div>

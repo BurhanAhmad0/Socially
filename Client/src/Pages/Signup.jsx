@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -6,6 +6,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext.jsx";
+import { LuLoaderCircle } from "react-icons/lu";
+import toast from "react-hot-toast";
 
 const userSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -22,6 +24,7 @@ const userSchema = yup.object().shape({
 });
 
 const Signup = () => {
+  const [signupReqLoading, setSignupReqLoading] = useState(false);
   const navigate = useNavigate();
   const { user, setUser, loading } = useAuth();
 
@@ -35,6 +38,7 @@ const Signup = () => {
   });
 
   const onSubmit = async (data) => {
+    setSignupReqLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/auth/register`,
@@ -46,6 +50,7 @@ const Signup = () => {
 
       if (response.status === 201 || response.status === 200) {
         console.log("Registration successful:", response.data);
+        toast.success("Signup successfull");
         setUser(response.data.user);
         // TODO: Redirect user or show success toast
         navigate("/");
@@ -59,10 +64,13 @@ const Signup = () => {
           "Registration failed. Please try again.";
         console.error("Registration error:", message);
         // TODO: Show toast or inline error message
-        // e.g. toast.error(message)
+        toast.error(message);
       } else {
+        toast.error("Some error occurred");
         console.error("Unexpected error:", error);
       }
+    } finally {
+      setSignupReqLoading(false);
     }
   };
 
@@ -148,9 +156,10 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="w-4/5 h-14 px-4 text-xl text-white rounded-lg bg-[#1A202C] hover:bg-[#1A202C]/90 cursor-pointer transition-all duration-300"
+          disabled={signupReqLoading}
+          className="flex items-center justify-center w-4/5 h-14 px-4 text-xl text-white rounded-lg bg-[#1A202C] hover:bg-[#1A202C]/90 cursor-pointer transition-all duration-300"
         >
-          Sign up
+          {signupReqLoading ? <LuLoaderCircle /> : "Sign up"}
         </button>
       </form>
 

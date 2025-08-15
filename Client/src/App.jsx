@@ -1,8 +1,10 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
+import ProtectedAuthRoute from "./Components/ProtectedAuthRoute.jsx";
 import { useApplyTheme } from "./Hooks/useApplyTheme.js";
 import LoaderComponent from "./Components/LoaderComponent.jsx";
+import { Toaster } from "react-hot-toast";
 
 // Lazy-loaded Layouts
 const AuthLayout = lazy(() => import("./Layouts/AuthLayout.jsx"));
@@ -32,11 +34,14 @@ const App = () => {
 
   return (
     <Suspense fallback={<LoaderComponent />}>
+      <Toaster position="top-right" />
       <Routes>
         {/* Public Auth Routes */}
-        <Route path="/" element={<AuthLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+        <Route element={<ProtectedAuthRoute />}>
+          <Route path="/" element={<AuthLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
         </Route>
 
         {/* Protected Routes */}

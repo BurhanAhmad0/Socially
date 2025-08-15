@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -6,6 +6,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useAuth } from "../Context/AuthContext.jsx";
+import { LuLoaderCircle } from "react-icons/lu";
+import toast from "react-hot-toast";
 
 const loginSchema = yup.object().shape({
   email: yup.string().email("Invalid email").required("Email is required"),
@@ -18,6 +20,7 @@ const loginSchema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const { user, setUser, loading } = useAuth();
+  const [loginReqLoading, setLoginReqLoading] = useState(false);
 
   const {
     register,
@@ -29,6 +32,7 @@ const Login = () => {
   });
 
   const onSubmit = async (data) => {
+    setLoginReqLoading(true);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/auth/login`,
@@ -40,10 +44,12 @@ const Login = () => {
 
       if (response.status === 201 || response.status === 200) {
         console.log("Login successful:", response.data);
+        toast.success("Login successful");
         setUser(response.data.user);
         // TODO: Redirect user or show success toast
         navigate("/");
       } else {
+        toast.error("Some error occurred");
         console.warn("Unexpected response:", response);
       }
     } catch (error) {
@@ -52,10 +58,13 @@ const Login = () => {
           error.response?.data?.message || "Login failed. Please try again.";
         console.error("Login error:", message);
         // TODO: Show toast or inline error message
-        // e.g. toast.error(message)
+        toast.error(message);
       } else {
+        toast.error("Some error occurred");
         console.error("Unexpected error:", error);
       }
+    } finally {
+      setLoginReqLoading(false);
     }
   };
 
@@ -98,8 +107,11 @@ const Login = () => {
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
 
-        <button className="w-4/5 h-14 px-4 text-xl text-white rounded-lg bg-[#1A202C] hover:bg-[#1A202C]/90 cursor-pointer transition-all duration-300">
-          Log in
+        <button
+          disabled={loginReqLoading}
+          className="flex items-center justify-center w-4/5 h-14 px-4 text-xl text-white rounded-lg bg-[#1A202C] hover:bg-[#1A202C]/90 cursor-pointer transition-all duration-300"
+        >
+          {loginReqLoading ? <LuLoaderCircle /> : "Log in"}
         </button>
       </form>
       <Link to={"/forgot"} className="text-[#828282] text-sm">

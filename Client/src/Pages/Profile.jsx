@@ -18,12 +18,15 @@ const ProfilePage = () => {
 
   const [tab, setTab] = useState("posts");
   const [posts, setPosts] = useState([]);
+  const [PostsReqLoading, setPostsReqLoading] = useState(false);
+  const [userReqLoading, setUserReqLoading] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      setUserReqLoading(true);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/user/${username}`,
@@ -53,6 +56,8 @@ const ProfilePage = () => {
         } else {
           console.error("Unexpected error while fetching profile:", error);
         }
+      } finally {
+        setUserReqLoading(false);
       }
     };
 
@@ -62,6 +67,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const getFeedPosts = async () => {
+      setPostsReqLoading(true);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BASE_URL}/posts/user/${username}`,
@@ -73,6 +79,8 @@ const ProfilePage = () => {
         setPosts(response.data.posts);
       } catch (error) {
         console.log(error);
+      } finally {
+        setPostsReqLoading(false);
       }
     };
 
@@ -89,6 +97,7 @@ const ProfilePage = () => {
         firstName={userProfile?.firstName}
         lastName={userProfile?.lastName}
         avatar={userProfile?.avatar}
+        userReqLoading={userReqLoading}
       />
 
       {/* Stats */}
@@ -96,6 +105,7 @@ const ProfilePage = () => {
         numberOfPosts={posts.length}
         followers={userProfile?.followers.length}
         following={userProfile?.following.length}
+        userReqLoading={userReqLoading}
       />
 
       {/* Tabs */}
@@ -135,7 +145,9 @@ const ProfilePage = () => {
       </div>
 
       {/* Tab Content */}
-      {tab === "posts" && <PostGallerySection posts={posts} />}
+      {tab === "posts" && (
+        <PostGallerySection posts={posts} PostsReqLoading={PostsReqLoading} />
+      )}
       {tab === "media" && <ProfileMediaSection />}
       {tab === "about" && (
         <ProfileAboutSection
@@ -147,6 +159,7 @@ const ProfilePage = () => {
           location={userProfile?.location}
           website={userProfile?.website}
           skills={userProfile?.skills}
+          userReqLoading={userReqLoading}
         />
       )}
     </div>
