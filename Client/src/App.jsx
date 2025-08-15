@@ -1,36 +1,58 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import AuthLayout from "./Layouts/AuthLayout.jsx";
-import UserLayout from "./Layouts/UserLayout.jsx";
-import Login from "./Pages/Login.jsx";
-import Signup from "./Pages/Signup.jsx";
-import Home from "./Pages/Home.jsx";
-import Explore from "./Pages/Explore.jsx";
-import Notifications from "./Pages/Notifications.jsx";
-import About from "./Pages/About.jsx";
-import Profile from "./Pages/Profile.jsx";
-import ForgotPassword from "./Pages/ForgotPassword.jsx";
-import Message from "./Pages/Message.jsx";
-import CreatePost from "./Pages/CreatePost.jsx";
-import NotFound from "./Pages/NotFound.jsx";
-import Post from "./Pages/Post.jsx";
-import PrivacyPolicy from "./Pages/PrivacyPolicy.jsx";
-import InternalServerError from "./Pages/InternalServerError.jsx";
-import Settings from "./Pages/Settings.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import { useApplyTheme } from "./Hooks/useApplyTheme.js";
+import { LuLoaderPinwheel } from "react-icons/lu";
+
+// Lazy-loaded Layouts
+const AuthLayout = lazy(() => import("./Layouts/AuthLayout.jsx"));
+const UserLayout = lazy(() => import("./Layouts/UserLayout.jsx"));
+
+// Lazy-loaded Pages
+const Login = lazy(() => import("./Pages/Login.jsx"));
+const Signup = lazy(() => import("./Pages/Signup.jsx"));
+const Home = lazy(() => import("./Pages/Home.jsx"));
+const Explore = lazy(() => import("./Pages/Explore.jsx"));
+const Notifications = lazy(() => import("./Pages/Notifications.jsx"));
+const About = lazy(() => import("./Pages/About.jsx"));
+const Profile = lazy(() => import("./Pages/Profile.jsx"));
+const ForgotPassword = lazy(() => import("./Pages/ForgotPassword.jsx"));
+const Message = lazy(() => import("./Pages/Message.jsx"));
+const CreatePost = lazy(() => import("./Pages/CreatePost.jsx"));
+const NotFound = lazy(() => import("./Pages/NotFound.jsx"));
+const Post = lazy(() => import("./Pages/Post.jsx"));
+const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy.jsx"));
+const InternalServerError = lazy(() =>
+  import("./Pages/InternalServerError.jsx")
+);
+const Settings = lazy(() => import("./Pages/Settings.jsx"));
 
 const App = () => {
   useApplyTheme(); // 🌙 Apply theme on every page load
 
   return (
-    <>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <LuLoaderPinwheel size={48} className="animate-spin" />
+        </div>
+      }
+    >
       <Routes>
+        {/* Public Auth Routes */}
         <Route path="/" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<Signup />} />
         </Route>
 
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<UserLayout />}>
             <Route index element={<Home />} />
@@ -44,13 +66,14 @@ const App = () => {
           </Route>
         </Route>
 
+        {/* Public Info Routes */}
         <Route path="/about" element={<About />} />
         <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/error-500" element={<InternalServerError />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </Suspense>
   );
 };
 
