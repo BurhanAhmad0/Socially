@@ -13,8 +13,7 @@ const LoaderComponent = () => {
 
       {/* Loader in center */}
       <main className="flex flex-1 flex-col items-center justify-center text-center">
-        <LuLoaderPinwheel size={48} className="animate-spin" />
-        <p className="mt-4 text-sm">Loading, please wait...</p>
+        <LuLoaderPinwheel size={50} className="animate-spin" />
       </main>
 
       {/* Bottom Footer */}
