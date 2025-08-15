@@ -15,9 +15,9 @@ const ProtectedRoute = () => {
     );
   }
 
-  // If not authenticated, redirect to login
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  // If authenticated, redirect to home
+  if (user) {
+    return <Navigate to="/" replace />;
   }
 
   // If authenticated, render child routes
