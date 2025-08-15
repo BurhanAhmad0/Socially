@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute.jsx";
 import { useApplyTheme } from "./Hooks/useApplyTheme.js";
-import { LuLoaderPinwheel } from "react-icons/lu";
+import LoaderComponent from "./Components/LoaderComponent.jsx";
 
 // Lazy-loaded Layouts
 const AuthLayout = lazy(() => import("./Layouts/AuthLayout.jsx"));
@@ -31,20 +31,7 @@ const App = () => {
   useApplyTheme(); // 🌙 Apply theme on every page load
 
   return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <LuLoaderPinwheel size={48} className="animate-spin" />
-        </div>
-      }
-    >
+    <Suspense fallback={<LoaderComponent />}>
       <Routes>
         {/* Public Auth Routes */}
         <Route path="/" element={<AuthLayout />}>
