@@ -54,7 +54,7 @@ const FeedItemsSection = () => {
           </div>
         ))
       ) : posts.length < 1 ? (
-        <div className="text-gray-400 text-center py-20">No posts yet</div>
+        <div className="text-gray-400 text-center py-5">No posts yet</div>
       ) : (
         posts.map((post) => (
           <div
