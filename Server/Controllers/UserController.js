@@ -105,7 +105,7 @@ const updateUserProfile = async (req, res) => {
       const streamUpload = (buffer) => {
         return new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
-            { folder: "users" },
+            { folder: "sociallyProfilePics" },
             (error, result) => {
               if (result) resolve(result);
               else reject(error);
