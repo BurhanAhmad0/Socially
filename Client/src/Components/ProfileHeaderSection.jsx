@@ -94,9 +94,7 @@ const ProfileHeaderSection = ({
                     </button>
                   )}
                   <button
-                    onClick={() => {
-                      navigate("/messages");
-                    }}
+                    onClick={() => navigate(`/messages/${username}`)}
                     className="dark:bg-white dark:text-black dark:hover:bg-white/80 bg-[#1A202C] text-white px-7 py-2 rounded hover:bg-[#1A202C]/75 cursor-pointer transition"
                   >
                     Message

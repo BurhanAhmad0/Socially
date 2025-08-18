@@ -9,6 +9,7 @@ import {
   unfollowUserProfile,
   deleteUserAccount,
   getSuggestionUsers,
+  getUserConversations,
 } from "../Controllers/UserController.js";
 
 const router = express.Router();
@@ -17,6 +18,7 @@ const upload = multer({ storage });
 
 router.get("/", AuthMiddleware, getUser);
 router.get("/suggestions", AuthMiddleware, getSuggestionUsers);
+router.get("/conversations", AuthMiddleware, getUserConversations);
 router.get("/:username", AuthMiddleware, getUserByUsername);
 router.put(
   "/update",

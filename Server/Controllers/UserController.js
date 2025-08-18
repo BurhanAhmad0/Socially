@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import cloudinary from "../Utils/cloudinary.js";
 import streamifier from "streamifier";
+import ConversationModel from "../Models/ConversationModel.js";
 
 const getUser = async (req, res) => {
   try {
@@ -61,6 +62,41 @@ const getUserByUsername = async (req, res) => {
   } catch (error) {
     console.error("Get user by username error:", error.message);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getUserConversations = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    if (!userId) {
+      // console.log("User id is undefined");
+      return res.status(404).send("User id is undefined");
+    }
+
+    const contactList = await ConversationModel.findOne({
+      owner: userId,
+    }).populate("conversations");
+
+    if (!contactList) {
+      return res.status(200).json({
+        success: true,
+        conversations: [],
+        message: "No contacts found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Conversation list",
+      conversations: contactList.conversations,
+    });
+  } catch (error) {
+    console.error("Error fetching user conversations:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
@@ -396,4 +432,5 @@ export {
   unfollowUserProfile,
   deleteUserAccount,
   getSuggestionUsers,
+  getUserConversations,
 };
