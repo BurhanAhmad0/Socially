@@ -36,6 +36,9 @@ const Sidebar = ({ setIsSidebarOpen }) => {
       <ul className="accountBtns mt-auto space-y-4">
         <li>
           <Link
+            onClick={() => {
+              setIsSidebarOpen(false);
+            }}
             to={`/${user?.username}`}
             className="flex items-center gap-3 text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
           >
@@ -59,6 +62,9 @@ const Sidebar = ({ setIsSidebarOpen }) => {
         </li>
         <li>
           <Link
+            onClick={() => {
+              setIsSidebarOpen(false);
+            }}
             to={"/settings"}
             className="flex items-center gap-3 text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
           >
