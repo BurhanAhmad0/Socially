@@ -8,12 +8,17 @@ import SidebarNavBtns from "./SidebarNavBtns.jsx";
 import { useAuth } from "../Context/AuthContext.jsx";
 import { LuLoaderCircle } from "react-icons/lu";
 
-const Sidebar = () => {
+const Sidebar = ({ setIsSidebarOpen }) => {
   const { user, setUser, loading, handleLogout, logoutReqLoading } = useAuth();
 
   return (
     <aside className="sidebar h-full px-5 py-7 border-r border-gray-200 dark:border-gray-700 bg-[#f9f9f9] dark:bg-[#1f1f1f] text-gray-900 dark:text-gray-100 flex flex-col justify-between transition-colors duration-300">
-      <h1 className="text-2xl font-bold">
+      <h1
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-2xl font-bold"
+      >
         <Link
           to={"/"}
           className="text-gray-900 dark:text-white transition-colors duration-300"
@@ -26,7 +31,7 @@ const Sidebar = () => {
       <SidebarSearchComponent />
 
       {/* Navigation Buttons */}
-      <SidebarNavBtns />
+      <SidebarNavBtns setIsSidebarOpen={setIsSidebarOpen} />
 
       <ul className="accountBtns mt-auto space-y-4">
         <li>

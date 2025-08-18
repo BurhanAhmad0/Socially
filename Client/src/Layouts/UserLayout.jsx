@@ -18,7 +18,7 @@ const UserLayout = () => {
     <section className="user-layout h-screen flex bg-[#f9f9f9] dark:bg-[#1f1f1f] text-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* Sidebar (Desktop) */}
       <div className="sidebar hidden md:block w-1/4 bg-white dark:bg-[#2a2a2a] border-r border-gray-200 dark:border-gray-700 transition-colors duration-300">
-        <Sidebar />
+        <Sidebar setIsSidebarOpen={setIsSidebarOpen} />
       </div>
 
       {/* Main Section */}
@@ -51,7 +51,12 @@ const UserLayout = () => {
           >
             <img src={MenuIcon} alt="Menu Icon" />
           </button>
-          <h1 className="text-2xl font-bold">
+          <h1
+            onClick={() => {
+              setIsSidebarOpen(false);
+            }}
+            className="text-2xl font-bold"
+          >
             <Link
               to="/"
               className="text-gray-900 dark:text-white transition-colors duration-300"
@@ -65,7 +70,7 @@ const UserLayout = () => {
         <SidebarSearchComponent />
 
         {/* Nav Buttons */}
-        <SidebarNavBtns />
+        <SidebarNavBtns setIsSidebarOpen={setIsSidebarOpen} />
 
         {/* Account Actions */}
         <ul className="accountBtns mt-auto space-y-4">

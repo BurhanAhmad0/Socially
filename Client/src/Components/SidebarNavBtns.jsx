@@ -6,10 +6,15 @@ import MessageIcon from "../assets/message.svg";
 import UploadIcon from "../assets/plus-square.svg";
 import { Link } from "react-router-dom";
 
-const SidebarNavBtns = () => {
+const SidebarNavBtns = ({ setIsSidebarOpen }) => {
   return (
     <ul className="navBtns space-y-5 mt-8">
-      <li className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <li
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
+      >
         <Link to={"/"} className="flex items-center gap-3">
           <img
             loading="lazy"
@@ -20,7 +25,12 @@ const SidebarNavBtns = () => {
           Home
         </Link>
       </li>
-      <li className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <li
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
+      >
         <Link to={"/explore"} className="flex items-center gap-3">
           <img
             loading="lazy"
@@ -31,7 +41,12 @@ const SidebarNavBtns = () => {
           Explore
         </Link>
       </li>
-      <li className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <li
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
+      >
         <Link to={"/notifications"} className="flex items-center gap-3">
           <img
             loading="lazy"
@@ -42,7 +57,12 @@ const SidebarNavBtns = () => {
           Notifications
         </Link>
       </li>
-      <li className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <li
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
+      >
         <Link to={"/messages"} className="flex items-center gap-3">
           <img
             loading="lazy"
@@ -53,7 +73,12 @@ const SidebarNavBtns = () => {
           Messages
         </Link>
       </li>
-      <li className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <li
+        onClick={() => {
+          setIsSidebarOpen(false);
+        }}
+        className="text-lg text-gray-800 dark:text-gray-200 transition-colors duration-300"
+      >
         <Link to={"/upload"} className="flex items-center gap-3">
           <img
             loading="lazy"

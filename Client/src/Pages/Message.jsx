@@ -206,7 +206,7 @@ const Messages = () => {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`absolute block md:hidden ${
+        className={`absolute z-10 block md:hidden ${
           isMessageSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } w-full md:w-72 h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] p-4 space-y-4 transition-all duration-300`}
       >
@@ -224,7 +224,10 @@ const Messages = () => {
         {conversationList.map((conv) => (
           <div
             key={conv._id}
-            onClick={() => navigate(`/messages/${conv.username}`)}
+            onClick={() => {
+              navigate(`/messages/${conv.username}`);
+              setIsMessageSidebarOpen(false);
+            }}
             className={`flex items-center p-2 rounded-lg cursor-pointer transition ${
               conv.id === selectedId
                 ? "bg-gray-200 dark:bg-white/10"
