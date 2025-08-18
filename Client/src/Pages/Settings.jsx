@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import ConfirmationModal from "../Components/ConfirmationModal.jsx";
 import UploadPlaceholderImg from "../assets/photo.png";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const userInfoUpdateSchema = yup.object().shape({
   name: yup.string(),
@@ -26,6 +27,7 @@ const Settings = () => {
   const [imgaeFile, setImgaeFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [deleteReqLoading, setDeleteReqLoading] = useState(false);
+  const [updateReqLoading, setUpdateReqLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -86,6 +88,7 @@ const Settings = () => {
 
   const onSubmit = async (data) => {
     // console.log("Updated", data);
+    setUpdateReqLoading(true);
 
     const formData = new FormData();
     formData.append("name", data.name);
@@ -129,6 +132,8 @@ const Settings = () => {
       } else {
         toast.error("An error occurred. Please try again.");
       }
+    } finally {
+      setUpdateReqLoading(false);
     }
   };
 
@@ -313,9 +318,14 @@ const Settings = () => {
           <div className="updateBtn my-5 flex justify-end items-center">
             <button
               type="submit"
-              className="bg-[#1A202C] hover:bg-[#1A202C]/75 dark:bg-white dark:hover:bg-white/75 dark:text-black text-white px-5 py-3 rounded transition duration-200 cursor-pointer"
+              disabled={updateReqLoading}
+              className="flex items-center justify-center bg-[#1A202C] hover:bg-[#1A202C]/75 dark:bg-white dark:hover:bg-white/75 dark:text-black text-white px-5 py-3 rounded transition duration-200 cursor-pointer"
             >
-              Save Changes
+              {updateReqLoading ? (
+                <LuLoaderCircle size={25} color="black" />
+              ) : (
+                "Save Changes"
+              )}
             </button>
           </div>
         </form>

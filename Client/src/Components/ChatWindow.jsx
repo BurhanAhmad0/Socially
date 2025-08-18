@@ -46,7 +46,15 @@ const ChatWindow = ({
           <div className="flex-1 overflow-y-auto space-y-4 p-2">
             {/* Incoming message */}
             {messageFetchReqLoading ? (
-              <div>Loading...</div>
+              // Skeleton Loader
+              <div className="space-y-4 py-4 animate-pulse">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-start space-y-2">
+                    <div className="w-32 h-4 bg-gray-300 dark:bg-gray-700 rounded-md"></div>
+                    <div className="w-20 h-3 bg-gray-200 dark:bg-gray-600 rounded-md"></div>
+                  </div>
+                ))}
+              </div>
             ) : messagesArray.length < 1 ? (
               <div className="text-sm text-gray-400 text-center py-10">
                 No conversation done yet
@@ -56,12 +64,12 @@ const ChatWindow = ({
                 <div key={index} className="flex flex-col items-start">
                   <div
                     className={`p-3 rounded-md shadow max-w-xs text-sm text-gray-800 dark:text-gray-100
-                    ${
-                      user?._id === message.sender
-                        ? "bg-blue-500 text-white self-end" // Sent by me
-                        : "bg-gray-300 dark:bg-[#2a2a2a] self-start"
-                    }
-                  `}
+          ${
+            user?._id === message.sender
+              ? "bg-blue-500 text-white self-end" // Sent by me
+              : "bg-gray-300 dark:bg-[#2a2a2a] self-start"
+          }
+        `}
                   >
                     {message.text}
                   </div>
