@@ -1,5 +1,6 @@
 import PostModel from "../Models/PostModel.js";
 import UserModel from "../Models/UserModel.js";
+import CommentModel from "../Models/CommentModel.js";
 import cloudinary from "../Utils/cloudinary.js";
 import streamifier from "streamifier";
 
@@ -119,6 +120,7 @@ const getPostsByUsername = async (req, res) => {
 const getPostById = async (req, res) => {
   try {
     const { postId } = req.params;
+    const { userId } = req.user;
 
     const post = await PostModel.findById(postId).populate(
       "owner",
@@ -129,13 +131,125 @@ const getPostById = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
+    const liked = post.likes.includes(userId);
+
     return res.status(200).json({
       message: "Post fetched successfully",
-      post,
+      post: {
+        ...post.toObject(), // convert Mongoose doc to plain object
+        liked, // add custom field
+      },
     });
   } catch (error) {
     console.error("Error fetching post by ID:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const likePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.user;
+
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { $addToSet: { likes: userId } }, // prevents duplicate likes
+      { new: true }
+    );
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Post liked successfully",
+      likes: post.likes, // return updated like count
+      post,
+    });
+  } catch (error) {
+    console.error("Error liking post:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const dislikePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.user;
+
+    const post = await PostModel.findByIdAndUpdate(
+      postId,
+      { $pull: { likes: userId } }, // prevents duplicate likes
+      { new: true }
+    );
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Post unliked successfully",
+      likes: post.likes, // return updated like count
+      post,
+    });
+  } catch (error) {
+    console.error("Error unliking post:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const addComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.user;
+    const { comment } = req.body;
+
+    const newComment = new CommentModel({
+      comment,
+      owner: userId,
+      post: postId,
+    });
+    newComment.save();
+
+    if (!newComment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Comment is not added" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Comment Posted successfully",
+      newComment, // return updated like count
+    });
+  } catch (error) {
+    console.error("Error commenting post:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+const getComment = async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    // Fetch all comments for the given post
+    const comments = await CommentModel.find({ post: postId })
+      .populate("owner", "name avatar") // only return needed fields
+      .sort({ createdAt: -1 }); // newest first
+
+    res.status(200).json({
+      success: true,
+      comments,
+    });
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -145,4 +259,8 @@ export {
   getExplorePosts,
   getPostsByUsername,
   getPostById,
+  likePost,
+  dislikePost,
+  addComment,
+  getComment,
 };

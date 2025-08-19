@@ -2,32 +2,23 @@ import mongoose, { Schema } from "mongoose";
 
 const { ObjectId } = mongoose.Schema.Types;
 
-const PostSchema = new Schema(
+const CommentSchema = new Schema(
   {
-    text: {
+    comment: {
       type: String,
       trim: true,
     },
-    image: {
-      type: String,
-      trim: true,
-    },
-    likes: [
-      {
-        type: ObjectId,
-        ref: "User",
-      },
-    ],
     owner: {
       type: ObjectId,
       ref: "User",
     },
+    post: { type: ObjectId, ref: "Post", required: true },
   },
   {
     timestamps: true, // Automatically manages createdAt and updatedAt
   }
 );
 
-const PostModel = mongoose.model("Post", PostSchema);
+const CommentModel = mongoose.model("Comment", CommentSchema);
 
-export default PostModel;
+export default CommentModel;

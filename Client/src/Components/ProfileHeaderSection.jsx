@@ -17,6 +17,26 @@ const ProfileHeaderSection = ({
   const { handleFollow, handleUnfollow, followReqLoading, unfollowReqLoading } =
     useApp();
 
+  const handleShare = async () => {
+    try {
+      const postUrl = `${window.location.origin}/${username}`;
+
+      if (navigator.share) {
+        // Mobile / browsers that support Web Share API
+        await navigator.share({
+          title: "Check out this profile",
+          url: postUrl,
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(postUrl);
+        alert("Profile link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error("Error sharing profile:", error);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-[#1f1f1f] shadow-md transition-colors duration-300">
       {userReqLoading ? (
@@ -47,8 +67,9 @@ const ProfileHeaderSection = ({
           />
           <div className="mt-4 md:mt-0 text-center md:text-left">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              {firstName + " " + lastName}
+              {lastName ? `${firstName} ${lastName}` : firstName}
             </h2>
+
             <p className="text-sm text-gray-500 dark:text-gray-400">
               @{username}
             </p>
@@ -101,6 +122,12 @@ const ProfileHeaderSection = ({
                   </button>
                 </>
               )}
+              <button
+                onClick={() => handleShare()}
+                className="dark:bg-white dark:text-black dark:hover:bg-white/80 bg-[#1A202C] text-white px-7 py-2 rounded hover:bg-[#1A202C]/75 cursor-pointer transition"
+              >
+                Share Profile
+              </button>
             </div>
           </div>
         </div>
