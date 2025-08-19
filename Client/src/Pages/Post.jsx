@@ -293,11 +293,10 @@ const Post = () => {
                 onClick={() => unLikePost(post._id)}
                 className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
               >
-                {post.likes.length}
-                <FaRegThumbsDown />
                 <span className="block sm:hidden">
-                  {post.likes.length || 0}
+                  {post.likes?.length || 0}
                 </span>
+                <FaRegThumbsDown />
                 <span className="hidden sm:block">Unlike</span>
               </button>
             )
@@ -310,8 +309,8 @@ const Post = () => {
               className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
             >
               {post.likes.length}
+              <span className="block sm:hidden">{post.likes?.length || 0}</span>
               <FaThumbsUp />
-              <span className="block sm:hidden">{post.likes.length || 0}</span>
               <span className="hidden sm:block">Like</span>
             </button>
           )}
@@ -319,8 +318,8 @@ const Post = () => {
             onClick={() => setAddingComment(true)}
             className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
           >
+            <span className="block sm:hidden">{postComments?.length || 0}</span>
             <FaRegCommentDots />
-            <span className="block sm:hidden">{post.comments || 0}</span>
             <span className="hidden sm:block">Comment</span>
           </button>
           <button
@@ -330,7 +329,6 @@ const Post = () => {
             className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
           >
             <FaShareAlt />
-            <span className="block sm:hidden">{post.shares || 0}</span>
             <span className="hidden sm:block">Share</span>
           </button>
           <span className="text-xs text-gray-400">
@@ -339,13 +337,11 @@ const Post = () => {
         </div>
 
         {addingComment && (
-          <div className="commentInput flex items-center gap-2 mt-5">
+          <div className="commentInput flex flex-col sm:flex-row gap-2 mt-5 w-full">
             <input
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
+              onChange={(e) => setComment(e.target.value)}
               autoComplete="off"
-              className="flex-1 h-14 px-4 rounded-md outline-none focus:ring-2 ring-offset-2 ring-black dark:ring-white bg-[#828282]/20 dark:bg-[#3a3a3a] text-gray-900 dark:text-gray-100 placeholder:text-sm placeholder:text-[#6C6C6C] dark:placeholder:text-gray-400 transition-all duration-300"
+              className="w-full flex-1 h-12 py-4 sm:h-14 px-4 rounded-md outline-none focus:ring-2 ring-offset-2 ring-black dark:ring-white bg-[#828282]/20 dark:bg-[#3a3a3a] text-gray-900 dark:text-gray-100 placeholder:text-sm placeholder:text-[#6C6C6C] dark:placeholder:text-gray-400 transition-all duration-300"
               placeholder="Write comment here..."
               type="text"
               name="comment"
@@ -354,9 +350,13 @@ const Post = () => {
             <button
               disabled={commentReqLoading}
               onClick={() => addComment(post._id)}
-              className="cursor-pointer h-14 px-6 rounded-md bg-black text-white dark:bg-white dark:text-black font-medium hover:opacity-90 transition-all duration-300"
+              className="h-12 sm:h-14 w-full sm:w-auto px-6 rounded-md bg-black text-white dark:bg-white dark:text-black font-medium hover:opacity-90 transition-all duration-300 flex items-center justify-center"
             >
-              {commentReqLoading ? <RiLoader3Line /> : "Send"}
+              {commentReqLoading ? (
+                <RiLoader3Line className="animate-spin" />
+              ) : (
+                "Send"
+              )}
             </button>
           </div>
         )}
