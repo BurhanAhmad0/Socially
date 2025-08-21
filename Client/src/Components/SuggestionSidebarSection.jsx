@@ -23,7 +23,7 @@ const SuggestionSidebarSection = () => {
             withCredentials: true,
           }
         );
-        console.log(data);
+        // console.log(data);
         setSuggestedUsers(data.users);
       } catch (error) {
         if (axios.isCancel(error)) {

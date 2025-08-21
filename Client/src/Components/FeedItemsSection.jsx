@@ -17,7 +17,7 @@ const FeedItemsSection = () => {
             withCredentials: true,
           }
         );
-        console.log(response);
+        // console.log(response);
         setPosts(response.data.posts);
       } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ const FeedItemsSection = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {feedReqLoading ? (
         [...Array(3)].map((_, i) => (
           <div

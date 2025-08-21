@@ -63,14 +63,14 @@ const Settings = () => {
     try {
       setIsModalOpen(false);
       setDeleteReqLoading(true);
-      console.log("Deleting account...");
+      // console.log("Deleting account...");
 
       const { data } = await axios.delete(
         `${import.meta.env.VITE_BASE_URL}/user/delete`,
         { withCredentials: true }
       );
 
-      console.log("Account deleted successfully:", data);
+      // console.log("Account deleted successfully:", data);
       navigate("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -115,7 +115,7 @@ const Settings = () => {
 
       if (response.status === 200) {
         toast.success("Profile updated successfully");
-        console.log("Success:", response.data);
+        // console.log("Success:", response.data);
       } else {
         toast.warn("Unexpected response from server.");
         console.warn("Unexpected response:", response);
@@ -146,7 +146,7 @@ const Settings = () => {
     const file = e.target.files?.[0]; // ✅ Correct property
 
     if (file) {
-      console.log("Selected file:", file);
+      // console.log("Selected file:", file);
       setImgaeFile(file);
       setImagePreview(URL.createObjectURL(file));
     } else {

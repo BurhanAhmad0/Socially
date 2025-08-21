@@ -38,7 +38,7 @@ const Messages = () => {
         );
 
         if (response.status === 200) {
-          console.log("Conversations retrieved:", response.data);
+          // console.log("Conversations retrieved:", response.data);
           setConversationList(response.data.conversations || []);
         } else {
           console.warn("Unexpected server response:", response);
@@ -71,7 +71,7 @@ const Messages = () => {
         );
 
         if ([200, 204].includes(response.status)) {
-          console.log("User profile retrieved successfully:", response.data);
+          // console.log("User profile retrieved successfully:", response.data);
           // Optionally: update state, clear local storage, or trigger UI updates
           // toast.success("Profile loaded successfully");
           setUserProfile(response.data.user);
@@ -135,17 +135,17 @@ const Messages = () => {
 
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("✅ Connected to server:", socket.id);
+      // console.log("✅ Connected to server:", socket.id);
     });
 
     socket.on("receiveMessage", (data) => {
-      console.log("📩 New message:", data);
+      // console.log("📩 New message:", data);
 
       setMessagesArray((prevMessages) => [...prevMessages, data]);
     });
 
     socket.on("roomJoined", (data) => {
-      console.log("📩 Room Joined:", data);
+      // console.log("📩 Room Joined:", data);
     });
 
     return () => {
@@ -166,7 +166,7 @@ const Messages = () => {
         );
 
         if (response.status === 200) {
-          console.log("Messages retrieved successfully:", response);
+          // console.log("Messages retrieved successfully:", response);
           setMessagesArray(response.data.messages); // update your messages state
         } else {
           console.warn(

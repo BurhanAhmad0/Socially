@@ -34,7 +34,7 @@ const ProfilePage = () => {
         );
 
         if ([200, 204].includes(response.status)) {
-          console.log("User profile retrieved successfully:", response.data);
+          // console.log("User profile retrieved successfully:", response.data);
           // Optionally: update state, clear local storage, or trigger UI updates
           // toast.success("Profile loaded successfully");
           setUserProfile(response.data.user);
@@ -75,7 +75,7 @@ const ProfilePage = () => {
             withCredentials: true,
           }
         );
-        console.log(response);
+        // console.log(response);
         setPosts(response.data.posts);
       } catch (error) {
         console.log(error);

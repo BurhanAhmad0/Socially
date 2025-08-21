@@ -39,7 +39,7 @@ const CreatePost = () => {
 
       if (response.status === 200) {
         toast.success("Post uploaded successfully");
-        console.log("Success:", response.data);
+        // console.log("Success:", response.data);
       } else {
         toast.warn("Unexpected response from server.");
         console.warn("Unexpected response:", response);

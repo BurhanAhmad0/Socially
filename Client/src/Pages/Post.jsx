@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { socket } from "../Utils/socket.js";
+import axios from "axios";
+import toast from "react-hot-toast";
 import {
   FaThumbsUp,
   FaRegThumbsDown,
@@ -7,13 +10,11 @@ import {
   FaShareAlt,
 } from "react-icons/fa";
 import { RiLoader3Line } from "react-icons/ri";
-import axios from "axios";
-import toast from "react-hot-toast";
 
 const Post = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const [postReqLoading, setPostReqLoading] = useState(false);
+
   const [post, setPost] = useState(null);
   const [LikeReqLoading, setLikeReqLoading] = useState(false);
   const [UnlikeReqLoading, setUnlikeReqLoading] = useState(false);
@@ -32,7 +33,16 @@ const Post = () => {
         { withCredentials: true }
       );
 
-      console.log("Like response:", response.data);
+      const roomName = "notification" + response.data.post.owner.slice(0, 6);
+      socket.emit("joinNotificationRoom", roomName);
+
+      socket.emit("sendNotification", {
+        roomName,
+        notification: "Liked your post",
+        recieverId: response.data.post?.owner,
+      });
+
+      // console.log("Like response:", response.data);
       return response.data; // return to caller if needed
     } catch (error) {
       if (error.response) {
@@ -70,7 +80,7 @@ const Post = () => {
         { withCredentials: true }
       );
 
-      console.log("Unlike response:", response.data);
+      // console.log("Unlike response:", response.data);
       return response.data; // let caller use it (e.g., update state)
     } catch (error) {
       if (error.response) {
@@ -111,6 +121,17 @@ const Post = () => {
         { withCredentials: true }
       );
       console.log(response);
+
+      const roomName =
+        "notification" + response.data.newComment.post.owner.slice(0, 6);
+      socket.emit("joinNotificationRoom", roomName);
+
+      socket.emit("sendNotification", {
+        roomName,
+        senderId: response.data.newComment.owner,
+        receiverId: response.data.newComment.post.owner,
+        notification: "Commented on your post",
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -161,7 +182,7 @@ const Post = () => {
           `${import.meta.env.VITE_BASE_URL}/posts/comment/${postId}`,
           { withCredentials: true }
         );
-        console.log(response);
+        // console.log(response);
         setPostComments(response.data.comments);
       } catch (error) {
         console.log(error);
@@ -182,7 +203,7 @@ const Post = () => {
           { withCredentials: true }
         );
         setPost(response.data.post);
-        console.log(response);
+        // console.log(response);
       } catch (error) {
         console.log(error);
       } finally {
@@ -262,7 +283,9 @@ const Post = () => {
           />
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-              {post.owner?.firstName + " " + post.owner?.lastName}
+              {post.owner?.lastName
+                ? `${post.owner?.firstName} ${post.owner?.lastName}`
+                : post.owner?.firstName}
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               @{post.owner?.username}

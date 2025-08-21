@@ -19,7 +19,7 @@ export const AppProvider = ({ children }) => {
         null,
         { withCredentials: true }
       );
-      console.log("Followed user successfully:", data);
+      // console.log("Followed user successfully:", data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(

@@ -11,6 +11,7 @@ const PostSchema = new Schema(
     image: {
       type: String,
       trim: true,
+      default: null,
     },
     likes: [
       {

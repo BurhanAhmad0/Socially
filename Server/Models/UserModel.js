@@ -42,7 +42,7 @@ const UserSchema = new Schema(
     },
     avatar: {
       type: String,
-      default: "",
+      default: null,
     },
     website: {
       type: String,

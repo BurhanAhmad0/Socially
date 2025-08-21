@@ -43,7 +43,7 @@ const Login = () => {
       );
 
       if (response.status === 201 || response.status === 200) {
-        console.log("Login successful:", response.data);
+        // console.log("Login successful:", response.data);
         toast.success("Login successful");
         setUser(response.data.user);
         // TODO: Redirect user or show success toast

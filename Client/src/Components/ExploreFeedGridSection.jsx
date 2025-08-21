@@ -17,7 +17,7 @@ const ExploreFeedGridSection = ({ mockPosts }) => {
             withCredentials: true,
           }
         );
-        console.log(response);
+        // console.log(response);
         setExplorePosts(response.data.posts);
       } catch (error) {
         console.log(error);

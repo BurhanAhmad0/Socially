@@ -49,7 +49,7 @@ const Signup = () => {
       );
 
       if (response.status === 201 || response.status === 200) {
-        console.log("Registration successful:", response.data);
+        // console.log("Registration successful:", response.data);
         toast.success("Signup successfull");
         setUser(response.data.user);
         // TODO: Redirect user or show success toast

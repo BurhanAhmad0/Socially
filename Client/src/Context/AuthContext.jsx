@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       if (response.status === 200 || response.status === 204) {
-        console.log("Logout successful:", response.data);
+        // console.log("Logout successful:", response.data);
         // Optionally: clear localStorage or user context
         toast.success("Logged out successfully");
         setUser(null);

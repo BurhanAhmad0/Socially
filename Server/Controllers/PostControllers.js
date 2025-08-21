@@ -210,12 +210,14 @@ const addComment = async (req, res) => {
     const { userId } = req.user;
     const { comment } = req.body;
 
+    // Step 1: Create and save the comment
     const newComment = new CommentModel({
       comment,
       owner: userId,
       post: postId,
     });
-    newComment.save();
+
+    await newComment.save();
 
     if (!newComment) {
       return res
@@ -223,10 +225,15 @@ const addComment = async (req, res) => {
         .json({ success: false, message: "Comment is not added" });
     }
 
+    // Step 2: Re-fetch with populate so you have access to post/owner data
+    const populatedComment = await CommentModel.findById(newComment._id)
+      .populate("post", "-password")
+      .populate("owner", "username email"); // optional
+
     res.status(200).json({
       success: true,
-      message: "Comment Posted successfully",
-      newComment, // return updated like count
+      message: "Comment posted successfully",
+      newComment: populatedComment,
     });
   } catch (error) {
     console.error("Error commenting post:", error);
